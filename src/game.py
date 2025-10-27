@@ -90,7 +90,7 @@ class Game:
 		self.ui.draw()
 
 		if self.debug:
-			self.text_renderer.render(f"FPS: {int(self.clock.get_fps())}", (10, 10), (255, 255, 255), (0, 0, 0))
+			self.text_renderer.render(f"FPS: {int(self.clock.get_fps())}", (10, 100), (255, 255, 255), (0, 0, 0))
 
 		if self.show_rects:
 			self.camera.draw_rects()
