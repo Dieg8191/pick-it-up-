@@ -1,0 +1,54 @@
+# --- Archivos de Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.log
+
+# --- Entorno virtual ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Archivos temporales ---
+*.tmp
+*.temp
+*.bak
+*.swp
+.DS_Store
+
+# --- Archivos del sistema ---
+Thumbs.db
+desktop.ini
+
+# --- Configuración del IDE ---
+.vscode/
+.idea/
+
+# --- Archivos de compilación o empaquetado ---
+build/
+dist/
+
+# --- Configuración de entorno ---
+.env
+.env.*
+
+# --- Archivos generados del juego ---
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.wav
+*.ogg
+*.mp3
+
+# (opcional) guarda solo assets de /assets/ si los tienes versionados
+# assets/
+
+# --- Archivos de base de datos local ---
+*.db
+*.sqlite
+*.sql

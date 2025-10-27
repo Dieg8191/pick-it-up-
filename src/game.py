@@ -9,6 +9,7 @@ from .objects.tile import Tile
 from .objects.grass import Grass
 from .objects.trash import Trash
 from .util.animation import Animation
+from .util.scoreSystem import ScoreSystem
 from random import randint
 
 class Game:
@@ -21,6 +22,7 @@ class Game:
 		self.text_renderer = TextRenderer()
 
 		self.animation = Animation()
+		self.paused = False
 
 		# Level
 		self.camera = Camera()
@@ -31,9 +33,15 @@ class Game:
 		self.action = None
 		self.player = None
 		self.create_map()
+		
+		game_time = 120
+		self.score_system = ScoreSystem(len(self.grass_sprites), len(self.grass_sprites), game_time)
 
 		# UI
-		self.ui = UI(self.player, self.trash_sprites, self.text_renderer)
+		self.ui = UI(self.player, self.trash_sprites, self.text_renderer, self.finish_game, game_time)
+
+	def finish_game(self):
+		pass
 
 	def handle_events(self) -> None:
 		for event in pygame.event.get():
@@ -46,6 +54,9 @@ class Game:
      
 				if event.key == pygame.K_F11:
 					pygame.display.toggle_fullscreen()
+
+				if event.key == pygame.K_p:
+					self.paused = not self.paused
 				
 				if event.key == pygame.K_F3:
 					self.debug = not self.debug
@@ -60,8 +71,12 @@ class Game:
 						self.player.selected_action = "sword"
 
 	def update(self) -> None:
-		self.update_sprites.update(dt=self.get_dt())
-		self.ui.update()
+		if not self.paused:
+			self.update_sprites.update(dt=self.get_dt())
+			self.ui.update(self.get_dt())
+
+		if len(self.trash_sprites) <= 0:
+			self.finish_game()
 
 	def get_dt(self) -> float:
 		return self.clock.get_time() / 1000.0
@@ -157,7 +172,6 @@ class Game:
 									self.grass_sprites,
 									self.create_player_action,
 									self.destroy_player_action)
-
 
 	def run(self) -> str:
 		while self.running:

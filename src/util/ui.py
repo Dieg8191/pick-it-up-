@@ -5,7 +5,7 @@ from ..objects.tile import Tile
 
 
 class UI:
-    def __init__(self, player: Player, trash_sprites: pygame.sprite.Group, text_renderer: TextRenderer):
+    def __init__(self, player: Player, trash_sprites: pygame.sprite.Group, text_renderer: TextRenderer, on_time_out: callable, game_time: float):
         self.screen = pygame.display.get_surface()
         self.screen_w, self.screen_h = self.screen.get_size()
         self.golden = (166, 124, 0)
@@ -32,8 +32,23 @@ class UI:
             "collector": collector
         }
 
-    def update(self):
-        pass
+        self.game_time = game_time
+        self.on_time_out = on_time_out
+        
+    def update(self, dt):
+        self.game_time -= dt
+
+    def draw_timer(self):
+        m = int(self.game_time // 60)
+        s = int(self.game_time % 60)
+        ms = int((self.game_time - int(self.game_time)) * 100)
+
+        time_str = f"{m:02d}:{s:02d}:{ms:02d}"
+
+        self.text_renderer.render(f"Tiempo restante: {time_str}", (10, 60), "white", "black", self.golden)
+
+        if self.game_time <= 0:
+            self.on_time_out()
 
     def draw_current_action(self):
         # Border
@@ -48,9 +63,9 @@ class UI:
 
     def draw_trash_count(self):
         trash_coount = len(self.trash_sprites)
-        self.text_renderer.render(f"Basura restante: {trash_coount}", (10, 10), "white", "black", self.golden), 
+        self.text_renderer.render(f"Basura restante: {trash_coount}", (10, 10), "white", "black", self.golden) 
         
-
     def draw(self):
         self.draw_current_action()
         self.draw_trash_count()
+        self.draw_timer()
