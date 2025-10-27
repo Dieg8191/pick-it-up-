@@ -10,6 +10,7 @@ from .objects.grass import Grass
 from .objects.trash import Trash
 from .util.animation import Animation
 from .util.scoreSystem import ScoreSystem
+from .util.scoreScreen import ScoreScreen
 from random import randint
 
 class Game:
@@ -33,15 +34,26 @@ class Game:
 		self.action = None
 		self.player = None
 		self.create_map()
+
+		self.score_screen = ScoreScreen()
 		
-		game_time = 120
-		self.score_system = ScoreSystem(len(self.grass_sprites), len(self.grass_sprites), game_time)
+		game_time = 1
+		self.score_system = ScoreSystem(len(self.grass_sprites), len(self.trash_sprites), game_time)
 
 		# UI
 		self.ui = UI(self.player, self.trash_sprites, self.text_renderer, self.finish_game, game_time)
 
 	def finish_game(self):
-		pass
+		self.running = False
+
+	def calculate_score(self):
+		grass = self.score_system.total_bushes - len(self.grass_sprites)
+		trash = self.score_system.total_trash - len(self.trash_sprites)
+		time = self.ui.game_time if self.ui.game_time >= 0 else 0
+		
+		score = self.score_system.calculate_score(grass, trash, time)
+		
+		return score
 
 	def handle_events(self) -> None:
 		for event in pygame.event.get():
@@ -180,5 +192,13 @@ class Game:
 			self.draw()
 			self.clock.tick(60)
 
-		return "exit"
+		score = self.calculate_score()
+		command = self.score_screen.show(score) # could be save, exit, menu
+
+		if command == "save":
+			command = "menu"
+			pass # save dont do it
+
+		
+		return command
 	

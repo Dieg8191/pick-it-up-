@@ -13,8 +13,6 @@ class App:
         
         pygame.display.set_caption("Clean It Up!")
 
-        self.game = Game()
-
     def set_dpi_awareness():
         """Configura la aplicación para escalar correctamente en pantallas HiDPI (Windows)."""
         if platform == "win32":
@@ -34,7 +32,8 @@ class App:
         while command != "exit":
             match command:
                 case "run":
-                    command = self.game.run()
+                    game = Game()
+                    command = game.run()
                     continue
 
                 case "menu":
